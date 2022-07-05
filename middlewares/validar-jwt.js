@@ -1,5 +1,6 @@
 const { response, request } = require("express");
 const jwt = require("jsonwebtoken");
+
 const Usuario = require("../models/usuario");
 
 const validarJWT = async (req = request, res = response, next) => {
@@ -23,7 +24,7 @@ const validarJWT = async (req = request, res = response, next) => {
     }
 
     // Verificar si el uid tiene estado en true
-    if (!usuario.state) {
+    if (!usuario.estado) {
       return res.status(401).json({
         msg: "Token no válido - usuario con estado: false",
       });

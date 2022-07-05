@@ -3,13 +3,13 @@ const { Categoria } = require('../models');
 
 // obtenerCategorias - paginado - total - populate
 const obtenerCategorias = async (req, res = response) => {
-  const { desde = 0, limite = 5 } = req.query;
-  const query = { state: true };
+  const { limite = 5, desde = 0 } = req.query;
+  const query = { estado: true };
 
   const [total, categorias] = await Promise.all([
     Categoria.countDocuments(query),
     Categoria.find(query)
-      .populate('usuario', 'name')
+      .populate('usuario', 'nombre')
       .skip(Number(desde))
       .limit(Number(limite)),
   ]);
@@ -24,7 +24,7 @@ const obtenerCategorias = async (req, res = response) => {
 const obtenerCategoria = async (req, res = response) => {
   const { id } = req.params;
   const categoria = await Categoria.findById(id)
-    .populate('usuario', 'name');
+    .populate('usuario', 'nombre');
 
   res.json(categoria)
 }

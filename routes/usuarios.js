@@ -26,31 +26,29 @@ const router = Router();
 
 router.get("/", usuariosGet);
 
-router.post(
-  "/",
-  [
-    check("name", "The name is required").not().isEmpty(),
-    check("password", "The password must be more than 6 letters").isLength({
-      min: 6,
-    }),
-    check("email", "The email is not valid").isEmail(),
-    check("email").custom(emailExiste),
-    // check("role", "Not a valid role").isIn(["ADMIN_ROLE", "USER_ROLE"]),
-    check("role").custom(esRoleValido),
-    validarCampos,
-  ],
-  usuariosPost
-);
-
 router.put(
   "/:id",
   [
-    check("id", "It is not a valid ID").isMongoId(),
+    check("id", "No es un ID válido").isMongoId(),
     check("id").custom(existeUsuarioPorId),
-    check("role").custom(esRoleValido), // Validaciobes personalizadas si mandan un rol o no
+    check("rol").custom(esRoleValido), // Validaciobes personalizadas si mandan un rol o no
     validarCampos,
   ],
   usuariosPut
+);
+
+router.post(
+  "/",
+  [
+    check("nombre", "El nombre es obligatorio").not().isEmpty(),
+    check("password", "El password debe de ser más de 6 letras").isLength({ min: 6, }),
+    check("correo", "El correo no es válido").isEmail(),
+    check("correo").custom(emailExiste),
+    // check("role", "Not a valid role").isIn(["ADMIN_ROLE", "USER_ROLE"]),
+    check("rol").custom(esRoleValido),
+    validarCampos,
+  ],
+  usuariosPost
 );
 
 router.delete(
@@ -58,8 +56,8 @@ router.delete(
   [
     validarJWT,
     // esAdminRole, //Tiene que ser Administrador para poder borrar un dato
-    tieneRole("ADMIN_ROLE", "VENTAS_ROLE", "OTRO_ROLE"),
-    check("id", "It is not a valid ID").isMongoId(),
+    tieneRole("ADMIN_ROLE", "USER_ROLE", "VENTAS_ROLE"),
+    check("id", "No es un ID válido").isMongoId(),
     check("id").custom(existeUsuarioPorId),
     validarCampos,
   ],

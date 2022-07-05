@@ -4,12 +4,12 @@ const { Producto } = require('../models');
 // obtenerProductos - paginado - total - populate
 const obtenerProductos = async (req, res = response) => {
   const { desde = 0, limite = 5 } = req.query;
-  const query = { state: true };
+  const query = { estado: true };
 
   const [total, productos] = await Promise.all([
     Producto.countDocuments(query),
     Producto.find(query)
-      .populate('usuario', 'name')
+      .populate('usuario', 'nombre')
       .populate('categoria', 'nombre')
       .skip(Number(desde))
       .limit(Number(limite)),
@@ -25,7 +25,7 @@ const obtenerProductos = async (req, res = response) => {
 const obtenerProducto = async (req, res = response) => {
   const { id } = req.params;
   const producto = await Producto.findById(id)
-    .populate('usuario', 'name')
+    .populate('usuario', 'nombre')
     .populate('categoria', 'nombre');
 
   res.json(producto)

@@ -1,4 +1,4 @@
-const { response, request } = require("express");
+const { response } = require("express");
 const bcryptjs = require("bcryptjs");
 
 const Usuario = require("../models/usuario");
@@ -6,12 +6,12 @@ const Usuario = require("../models/usuario");
 const { generarJWT } = require("../helpers/generar-jwt");
 const { googleVerify } = require("../helpers/google-verify");
 
-const login = async (req = request, res = response) => {
-  const { email, password } = req.body;
+const login = async (req, res = response) => {
+  const { correo, password } = req.body;
 
   try {
     // Verificar si el email existe
-    const usuario = await Usuario.findOne({ email });
+    const usuario = await Usuario.findOne({ correo });
     if (!usuario) {
       return res.status(400).json({
         msg: "Usuario / Password no son correctos - email",
@@ -19,9 +19,9 @@ const login = async (req = request, res = response) => {
     }
 
     // Si el usuario está activo
-    if (!usuario.state) {
+    if (!usuario.estado) {
       return res.status(400).json({
-        msg: "Usuario / Password no son correctos - state: false",
+        msg: "Usuario / Password no son correctos - estado: false",
       });
     }
 
@@ -52,7 +52,7 @@ const googleSignIn = async (req, res = response) => {
   const { id_token } = req.body;
 
   try {
-    const { nombre, img, correo } = await googleVerify(id_token);
+    const { correo, nombre, img } = await googleVerify(id_token);
     // console.log(googleUser);
     let usuario = await Usuario.findOne({ correo });
 
@@ -72,7 +72,7 @@ const googleSignIn = async (req, res = response) => {
     }
 
     // Si el usuario en DB
-    if (!usuario.state) {
+    if (!usuario.estado) {
       return res.status(401).json({
         msg: "hable con el administrador, usuario bloqueado",
       });
@@ -87,7 +87,7 @@ const googleSignIn = async (req, res = response) => {
     });
   } catch (error) {
     // ok: false,
-    console.log(error);
+    // console.log(error);
     res.status(400).json({
       msg: "El Token de Google no es válido",
       // id_token,

@@ -10,8 +10,8 @@ const router = Router();
 router.post(
   "/login",
   [
-    check("email", "Email is required").isEmail(),
-    check("password", "Password is required").not().isEmpty(),
+    check("correo", "El correo es obligatorio").isEmail(),
+    check("password", "La contraseña es obligatoria").not().isEmpty(),
     validarCampos,
   ],
   login
@@ -19,7 +19,7 @@ router.post(
 
 router.post(
   "/google",
-  [check("id_token", "id:token es necesario").not().isEmpty(), validarCampos],
+  [check("id_token", "id_token es necesario").not().isEmpty(), validarCampos],
   googleSignIn
 );
 
