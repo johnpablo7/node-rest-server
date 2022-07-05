@@ -22,19 +22,15 @@ const obtenerCategorias = async (req, res = response) => {
 
 // obtenerCategoria - populate {}
 const obtenerCategoria = async (req, res = response) => {
-
   const { id } = req.params;
-  const categoria = await Categoria.findById(id).populate('usuario', 'name');
+  const categoria = await Categoria.findById(id)
+    .populate('usuario', 'name');
 
   res.json(categoria)
-
 }
 
-
 const crearCategoria = async (req, res = response) => {
-  console.log(Categoria);
   const nombre = req.body.nombre.toUpperCase();
-
   const categoriaDB = await Categoria.findOne({ nombre });
 
   if (categoriaDB) {
@@ -48,22 +44,42 @@ const crearCategoria = async (req, res = response) => {
     nombre: nombre,
     usuario: req.usuario._id,
   }
-
   const categoria = new Categoria(data);
 
   // Guardar DB
   await categoria.save();
-
   res.status(201).json(categoria);
 }
 
 // actualizarCategoria
+const actualizarCategoria = async (req, res = response) => {
+  const { id } = req.params;
+  const { estado, usuario, ...data } = req.body;
+
+  data.nombre = data.nombre.toUpperCase();
+  data.usuario = req.usuario._id;
+
+  const categoria = await Categoria.findByIdAndUpdate(id, data, { new: true });
+
+  res.json(categoria)
+}
 
 // borrarCategoria - estado:false
+const borrarCategoria = async (req, res = response) => {
+  const { id } = req.params;
+  const categoriaBorrada = await Categoria.findByIdAndUpdate(
+    id,
+    { estado: false },
+    { new: true }
+  );
 
+  res.json(categoriaBorrada)
+}
 
 module.exports = {
   crearCategoria,
   obtenerCategorias,
-  obtenerCategoria
+  obtenerCategoria,
+  actualizarCategoria,
+  borrarCategoria
 }

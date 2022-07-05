@@ -1,31 +1,26 @@
-const { response, request } = require("express");
+const { response, req } = require("express");
 const bcryptjs = require("bcryptjs");
-
 const Usuario = require("../models/usuario");
 
-const usuariosGet = async (req = request, res = response) => {
+const usuariosGet = async (req, res = response) => {
   // const { q, nombre = "No name", apikey, page = 1, limit } = req.query;  // Referencia
   const { desde = 0, limite = 5 } = req.query;
   const query = { state: true };
 
   const [total, usuarios] = await Promise.all([
     Usuario.countDocuments(query),
-    Usuario.find(query).skip(Number(desde)).limit(Number(limite)),
+    Usuario.find(query)
+      .skip(Number(desde))
+      .limit(Number(limite)),
   ]);
 
   res.json({
     total,
     usuarios,
   });
-  // msg: "get API - controlador", Se puede modificar los params para la paginación y otros
-  // q,
-  // nombre,
-  // apikey,
-  // page,
-  // limit,
 };
 
-const usuariosPost = async (req, res) => {
+const usuariosPost = async (req, res = response) => {
   const { name, email, password, role } = req.body;
   const usuario = new Usuario({ name, email, password, role });
 
@@ -44,7 +39,7 @@ const usuariosPost = async (req, res) => {
 
 const usuariosPut = async (req, res) => {
   const { id } = req.params;
-  const { _id, password, google, email, ...resto } = req.body; // Solo se esta tomando el ...resto lo demás no se esta incluyendo
+  const { _id, password, google, email, ...resto } = req.body; // Solo se esta tomando el ...resto, lo demás no se esta incluyendo
 
   if (password) {
     // Desencriptar la contraseña para actualizar
@@ -62,7 +57,6 @@ const usuariosPut = async (req, res) => {
 
 const usuariosDelete = async (req, res = response) => {
   const { id } = req.params;
-
   const usuario = await Usuario.findByIdAndUpdate(
     id,
     { state: false },
