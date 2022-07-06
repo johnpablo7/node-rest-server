@@ -32,7 +32,7 @@ const usuariosPost = async (req, res = response) => {
   await usuario.save();
 
   res.json({
-    // msg: "post API - usuariosPost", Usuario creado correctamente desde Postman
+    msg: "post API - usuariosPost",
     usuario,
   });
 };

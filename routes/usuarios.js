@@ -44,7 +44,7 @@ router.post(
     check("password", "El password debe de ser más de 6 letras").isLength({ min: 6, }),
     check("correo", "El correo no es válido").isEmail(),
     check("correo").custom(emailExiste),
-    // check("role", "Not a valid role").isIn(["ADMIN_ROLE", "USER_ROLE"]),
+    // check("rol", "Not a valid role").isIn(["ADMIN_ROLE", "USER_ROLE"]),
     check("rol").custom(esRoleValido),
     validarCampos,
   ],

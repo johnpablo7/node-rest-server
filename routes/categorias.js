@@ -42,7 +42,7 @@ router.post('/', [
 router.put('/:id', [
   validarJWT,
   check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-  check('categoria', 'No es un id de Mongo').isMongoId(),
+  // check('categoria', 'No es un id de Mongo').isMongoId(),
   check('id').custom(existeCategoriaPorId),
   check("nombre", "id").custom(categoriaExisteActualizar),
   validarCampos,
